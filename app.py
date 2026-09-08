@@ -1,10 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
 @app.route("/")
-def hello():
-    return "Hello lilseniorj!???!"
+def home():
+    role = "normal"
+    notes = ["Note 1", "Note 2", "Note 3"]
+    return render_template("home.html", role=role, notes=notes)
 
 @app.route("/about")
 def about():
@@ -23,4 +25,4 @@ def api_info():
         "nombre": "Notes App",
         "version": "1.1.1"
     }
-    return jsonify(data), 200
+    return jsonify(data)
