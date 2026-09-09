@@ -30,7 +30,8 @@ def api_info():
 
 @app.route("/confirmation")
 def confirmation():
-    return "Test"
+    note = request.args.get("note")
+    return render_template("confirmation.html", note=note)
 
 @app.route("/create-note", methods=["GET", "POST"])
 def create_note():
