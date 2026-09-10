@@ -5,3 +5,6 @@ CLAUDE.md
 #enviroment
 venv/
 __pycache__
+
+#database
+*.sqlite
