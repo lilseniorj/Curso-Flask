@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit a Note</title>
+</head>
+
+<body>
+  <h1>Edit note</h1>
+  <form method="POST">
+
+    <label for="title">Title</label>
+    <input type="text" name="title" id="title" value="{{ note.title }}">
+    <br>
+    <label for="content">Content</label>
+    <input type="text" name="content" id="content" value="{{ note.content }}">
+
+    <input type="datetime-local" name="published_at" value="{{ note.published_at }}">
+
+    <input type="submit" value="Save note">
+  </form>
+</body>
+
+</html>
