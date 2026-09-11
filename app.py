@@ -1,61 +1,25 @@
-import os
-from datetime import datetime, timezone
+from datetime import datetime
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, redirect, render_template, request, url_for
+
+from config import Config
+from models import Note, db
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
-
-DB_FILE_PATH = os.path.join(os.path.dirname(__file__), "notes.sqlite")
-
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_FILE_PATH}"
-
-app.config.setdefault("SQLALCHEMY_TRACK_MODIFICATIONS", False)
-
-
-db = SQLAlchemy(app)
-
-
-class Note(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.String(200), nullable=False)
-    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-    published_at = db.Column(db.DateTime)
-
-    def __repr__(self):
-        return f"Note {self.id}: {self.title}"
+db.init_app(app)
 
 
 @app.route("/")
 def home():
     notes = Note.query.all()
-    return render_template("home.html", notes=notes, now=datetime.now() )
+    return render_template("home.html", notes=notes, now=datetime.now())
 
 
 @app.route("/about")
 def about():
     return "This is a Notes app"
-
-
-@app.route("/contact", methods=["GET", "POST"])
-def contact():
-    if request.method == "POST":
-        return "Form submitted successfully.", 201
-    return "Contact page"
-
-
-@app.route("/api/info")
-def api_info():
-    data = {"nombre": "Notes App", "version": "1.1.1"}
-    return jsonify(data)
-
-
-@app.route("/confirmation")
-def confirmation():
-    note = request.args.get("note")
-    return render_template("confirmation.html", note=note)
 
 
 @app.route("/create-note", methods=["GET", "POST"])
