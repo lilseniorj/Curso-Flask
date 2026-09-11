@@ -7,15 +7,20 @@
 </head>
 <body>
   <h1>Welcome to Flask Notes</h1>
-  {% if role == "admin" %}
-  <button>Eliminar</button>
-  {% else  %}
-  <button>Solicitar eliminacion</button>
-  {% endif %}
   <ul>
     {% for note in notes %}
-      <li>{{note}}</li>
+      <li>
+        {{ note.title }}
+        <br>
+        {{ note.content }}
+        <br>
+        {{ note.id }}
+      </li>
+      {% else %}
+      Not notes yet
     {% endfor %}
   </ul>
+
+  <a href="{{ url_for('create_note') }}">Create a new note</a>
 </body>
 </html>

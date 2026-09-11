@@ -24,17 +24,16 @@ class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.String(200), nullable=False)
-    create_at = db.Column(db.DateTime, default=datetime.now)
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
-        return f"<Note {self.id}: {self.title}>"
+        return f"Note {self.id}: {self.title}"
 
 
 @app.route("/")
 def home():
-    role = "normal"
-    notes = ["Note 1", "Note 2", "Note 3"]
-    return render_template("home.html", role=role, notes=notes)
+    notes = Note.query.all()
+    return render_template("home.html", notes=notes)
 
 @app.route("/about")
 def about():
@@ -64,8 +63,17 @@ def confirmation():
 @app.route("/create-note", methods=["GET", "POST"])
 def create_note():
     if request.method == "POST":
-        note = request.form.get("note", "Not found")
+        title = request.form.get("title", "")
+        content = request.form.get("content", "")
+
+        note_db = Note(
+            title=title, content=content
+        )
+
+        db.session.add(note_db)
+        db.session.commit()
+
         return redirect(
-            url_for("confirmation", note=note)
+            url_for("home")
         )
     return render_template("note_form.html")
