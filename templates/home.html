@@ -1,38 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home page</title>
 </head>
 <body>
-  <h1>Welcome to Flask Notes</h1>
-  <ul>
-    {% for note in notes %}
-      {% if note.published_at and note.published_at <= now %}
-        <li>
-          {{ note.title }}
-          <br>
-          {{ note.content }}
-          <a href="{{ url_for('notes.edit_note', note_id=note.id) }}">
-            Edit 📝
-          </a>
-          <form action="{{ url_for('notes.delete_note', note_id=note.id) }}" method="post" onsubmit=" return confirm('Delete this note?')" >
-            <button type="submit">Delete</button>
-          </form>
-          <br>
-          {{ note.id }}
+    <h1>Welcome to Flask Notes</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <ul>
+        {% for category, message in messages %}
+        <li class="{{ category }}">
+            {{ message }}
         </li>
-      {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <ul>
+    {% for note in notes %}
+        {% if note.published_at and note.published_at <= now %}
+        <li>
+            {{ note.title }}
+            <br>
+            {{ note.content }}
+            <a href="{{ url_for('notes.edit_note', note_id=note.id) }}">
+            Edit 📝
+            </a>
+            <form action="{{ url_for('notes.delete_note', note_id=note.id) }}" method="post" onsubmit=" return confirm('Delete this note?')" >
+            <button type="submit">Delete</button>
+            </form>
+            <br>
+            {{ note.id }}
+        </li>
+        {% endif %}
     {% else %}
         Not notes yet
     {% endfor %}
-  </ul>
+    </ul>
 
-  <a href="{{ url_for('notes.create_note') }}">Create a new note</a>
-  <br>
-  <a href="{{ url_for('users.login') }}">Login</a>
-  <br>
-  <a href="{{ url_for('users.register') }}">Register</a>
+    <a href="{{ url_for('notes.create_note') }}">Create a new note</a>
+    <br>
+    <a href="{{ url_for('users.login') }}">Login</a>
+    <br>
+    <a href="{{ url_for('users.register') }}">Register</a>
 </body>
 </html>

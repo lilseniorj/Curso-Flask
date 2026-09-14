@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from models import Note, db
 
@@ -30,6 +30,7 @@ def create_note():
         db.session.add(note_db)
         db.session.commit()
 
+        flash("Note created", "success")
         return redirect(url_for("notes.home"))
     return render_template("note_form.html")
 
@@ -50,10 +51,10 @@ def edit_note(note_id):
         note.title = title
         note.content = content
         note.published_at = published_at
-
         db.session.commit()
-        return redirect(url_for("notes.home"))
 
+        flash("Note updated", "success")
+        return redirect(url_for("notes.home"))
     return render_template("edit_note.html", note=note)
 
 
@@ -62,4 +63,6 @@ def delete_note(note_id):
     note = Note.query.get_or_404(note_id)
     db.session.delete(note)
     db.session.commit()
+
+    flash("Note deleted", "warning")
     return redirect(url_for("notes.home"))
