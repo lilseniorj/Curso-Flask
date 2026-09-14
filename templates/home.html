@@ -20,7 +20,12 @@
         <div class="flex items-start justify-between gap-4">
           <div class="min-w-0">
             <h2 class="font-medium text-slate-900 truncate">{{ note.title }}</h2>
-            <p class="text-sm text-slate-600 mt-1">{{ note.content }}</p>
+            {% if note.created_at %}
+              <p class="text-xs text-slate-400 mt-0.5">
+                Created on {{ note.created_at.strftime("%B %d, %Y") }}
+              </p>
+            {% endif %}
+            <p class="text-sm text-slate-600 mt-2">{{ note.content }}</p>
           </div>
           <span class="text-xs text-slate-400 shrink-0">#{{ note.id }}</span>
         </div>
