@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Notes App{% endblock title %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 text-slate-800">
+
+  <nav class="bg-white border-b border-slate-200">
+    <div class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="{{ url_for('notes.home') }}" class="font-semibold text-slate-900">
+        📝 Notes
+      </a>
+      <div class="flex items-center gap-4 text-sm">
+        <a href="{{ url_for('users.login') }}" class="text-slate-600 hover:text-slate-900">Login</a>
+        <a href="{{ url_for('users.register') }}"
+          class="bg-slate-900 text-white px-3 py-1.5 rounded-md hover:bg-slate-700">
+          Register
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-4 py-8">
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+        {% set styles = {
+          "success": "bg-green-50 text-green-800 border-green-300",
+          "error":   "bg-red-50 text-red-800 border-red-300",
+          "warning": "bg-amber-50 text-amber-800 border-amber-300"
+        } %}
+        <div class="mb-6 space-y-2">
+          {% for category, message in messages %}
+            <p class="border rounded-md px-4 py-3 text-sm
+                      {{ styles.get(category, 'bg-slate-50 text-slate-700 border-slate-300') }}">
+              {{ message }}
+            </p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock content %}
+
+  </main>
+
+</body>
+
+</html>

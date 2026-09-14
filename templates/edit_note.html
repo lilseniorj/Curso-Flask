@@ -1,25 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit a Note</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-  <h1>Edit note</h1>
-  <form method="POST">
+{% block title %}Edit note · Notes App{% endblock title %}
 
-    <label for="title">Title</label>
-    <input type="text" name="title" id="title" value="{{ note.title }}">
-    <br>
-    <label for="content">Content</label>
-    <input type="text" name="content" id="content" value="{{ note.content }}">
+{% block content %}
 
-    <input type="datetime-local" name="published_at" value="{{ note.published_at }}">
+  <h1 class="text-2xl font-semibold text-slate-900 mb-6">Edit note</h1>
 
-    <input type="submit" value="Save note">
-  </form>
-</body>
+  <div class="bg-white border border-slate-200 rounded-lg p-6">
+    <form method="POST" class="space-y-4">
 
-</html>
+      <div>
+        <label for="title" class="block text-sm font-medium text-slate-700 mb-1">Title</label>
+        <input type="text" name="title" id="title" value="{{ note.title }}"
+               class="w-full border border-slate-300 rounded-md px-3 py-2
+                      focus:outline-none focus:ring-2 focus:ring-slate-400">
+      </div>
+
+      <div>
+        <label for="content" class="block text-sm font-medium text-slate-700 mb-1">Content</label>
+        <textarea name="content" id="content" rows="4"
+                  class="w-full border border-slate-300 rounded-md px-3 py-2
+                         focus:outline-none focus:ring-2 focus:ring-slate-400">{{ note.content }}</textarea>
+      </div>
+
+      <div>
+        <label for="published_at" class="block text-sm font-medium text-slate-700 mb-1">
+          Publish date
+        </label>
+        <input type="datetime-local" name="published_at" id="published_at"
+               value="{{ note.published_at.strftime('%Y-%m-%dT%H:%M') if note.published_at else '' }}"
+               class="w-full border border-slate-300 rounded-md px-3 py-2
+                      focus:outline-none focus:ring-2 focus:ring-slate-400">
+        <p class="text-xs text-slate-500 mt-1">
+          Leave it empty to keep the note as a draft.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <input type="submit" value="Save note"
+               class="bg-slate-900 text-white px-4 py-2 rounded-md hover:bg-slate-700 cursor-pointer">
+        <a href="{{ url_for('notes.home') }}" class="text-sm text-slate-600 hover:text-slate-900">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+{% endblock content %}
