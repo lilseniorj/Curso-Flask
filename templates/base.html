@@ -16,11 +16,18 @@
         📝 Notes
       </a>
       <div class="flex items-center gap-4 text-sm">
-        <a href="{{ url_for('users.login') }}" class="text-slate-600 hover:text-slate-900">Login</a>
-        <a href="{{ url_for('users.register') }}"
-          class="bg-slate-900 text-white px-3 py-1.5 rounded-md hover:bg-slate-700">
-          Register
-        </a>
+        {% if session.user %}
+          <span class="text-slate-500">{{ session.user }}</span>
+          <form action="{{ url_for('auth.logout') }}" method="POST">
+            <button type="submit" class="text-slate-600 hover:text-slate-900">Logout</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="text-slate-600 hover:text-slate-900">Login</a>
+          <a href="{{ url_for('users.register') }}"
+            class="bg-slate-900 text-white px-3 py-1.5 rounded-md hover:bg-slate-700">
+            Register
+          </a>
+        {% endif %}
       </div>
     </div>
   </nav>

@@ -1,5 +1,6 @@
 from flask import Flask
 
+from auth.routes import auth_bp
 from config import Config
 from models import db
 from notes.routes import notes_bp
@@ -12,6 +13,7 @@ db.init_app(app)
 
 app.register_blueprint(notes_bp)
 app.register_blueprint(users_bp)
+app.register_blueprint(auth_bp)
 
 
 @app.route("/about")
