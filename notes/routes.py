@@ -15,13 +15,26 @@ def home():
     return render_template("home.html", notes=notes, now=datetime.now())
 
 
+def validate_note(title, content):
+    if len(title) < 10:
+        return "The title is too short, minimum 10 characters."
+    if len(content) < 300:
+        return "The content is too short, minimum 300 characters."
+    return None
+
+
 @notes_bp.route("/create-note", methods=["GET", "POST"])
 @login_required
 def create_note():
     if request.method == "POST":
-        title = request.form.get("title", "")
-        content = request.form.get("content", "")
+        title = request.form.get("title", "").strip()
+        content = request.form.get("content", "").strip()
         published_at = request.form.get("published_at", "")
+
+        error = validate_note(title, content)
+        if error:
+            flash(error, "error")
+            return render_template("note_form.html", title=title, content=content)
 
         if published_at:
             published_at = datetime.fromisoformat(published_at)
@@ -44,9 +57,15 @@ def edit_note(note_id):
     note = Note.query.get_or_404(note_id)
 
     if request.method == "POST":
-        title = request.form.get("title", "")
-        content = request.form.get("content", "")
+        title = request.form.get("title", "").strip()
+        content = request.form.get("content", "").strip()
         published_at = request.form.get("published_at", "")
+
+        error = validate_note(title, content)
+        if error:
+            flash(error, "error")
+            return render_template("edit_note.html", note=note)
+
         if published_at:
             published_at = datetime.fromisoformat(published_at)
         else:
