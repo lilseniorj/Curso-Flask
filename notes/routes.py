@@ -1,19 +1,22 @@
 from datetime import datetime
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
+from auth.decorators import login_required
 from models import Note, db
 
 notes_bp = Blueprint("notes", __name__)
 
 
 @notes_bp.route("/")
+@login_required
 def home():
     notes = Note.query.all()
     return render_template("home.html", notes=notes, now=datetime.now())
 
 
 @notes_bp.route("/create-note", methods=["GET", "POST"])
+@login_required
 def create_note():
     if request.method == "POST":
         title = request.form.get("title", "")
@@ -36,6 +39,7 @@ def create_note():
 
 
 @notes_bp.route("/edit-note/<int:note_id>", methods=["GET", "POST"])
+@login_required
 def edit_note(note_id):
     note = Note.query.get_or_404(note_id)
 
@@ -59,6 +63,7 @@ def edit_note(note_id):
 
 
 @notes_bp.route("/delete-note/<int:note_id>", methods=["POST"])
+@login_required
 def delete_note(note_id):
     note = Note.query.get_or_404(note_id)
     db.session.delete(note)
